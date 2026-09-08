@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Competition — Type Like Sherlock</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <nav class="site-nav">
+    <span class="nav-brand">TYPE LIKE SHERLOCK</span>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Practice</a>
+      <a href="competition.html" class="nav-link nav-link-active">Competition</a>
+    </div>
+  </nav>
+
+  <section class="multiplayer-panel" id="multiplayer-panel">
+    <p class="mp-eyebrow">Competition Mode</p>
+    <h2 class="mp-heading">RACE A FRIEND<span class="cursor">_</span></h2>
+    <p class="mp-tagline">Same quote, same clock. Whoever deduces fastest wins.</p>
+
+    <div class="mp-card">
+      <input type="text" id="mp-name" placeholder="Your name" autocomplete="off">
+      <div class="mp-actions">
+        <button type="button" id="mp-create">Create Room</button>
+        <input type="text" id="mp-room-code" placeholder="Room code" maxlength="4" autocomplete="off">
+        <button type="button" id="mp-join">Join Room</button>
+      </div>
+      <p id="mp-status" class="mp-status"></p>
+      <div id="mp-countdown" class="mp-countdown"></div>
+      <ul id="mp-players" class="mp-players"></ul>
+    </div>
+  </section>
+
+  <main class="game-shell" id="game-shell" data-difficulty="easy">
+    <header class="top-bar">
+      <div>
+        <h1>Race track</h1>
+        <p class="intro">Join a room above, then wait for both players to be ready.</p>
+      </div>
+      <div class="difficulty-panel" aria-live="polite">
+        <span class="difficulty-label">Difficulty</span>
+        <span id="difficulty-level" class="difficulty-badge easy" aria-label="Current difficulty level">Easy</span>
+      </div>
+    </header>
+
+    <div class="stats" aria-live="polite" role="status" aria-atomic="true">
+      <div class="stat-card">
+        <span class="stat-label">WPM</span>
+        <strong id="wpm-stat">0</strong>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Accuracy</span>
+        <strong id="accuracy-stat">100%</strong>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Streak</span>
+        <strong id="streak-stat">0</strong>
+      </div>
+    </div>
+    <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Quote completion progress">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+    <p id="race-timer" class="race-timer"></p>
+    <p id="quote" class="quote" aria-live="polite" aria-label="Quote to type"></p>
+    <p id="message" class="message" role="status" aria-live="polite" aria-atomic="true"></p>
+
+    <div class="input-row">
+      <label class="sr-only" for="typed-value">Type the highlighted text</label>
+      <input
+        type="text"
+        id="typed-value"
+        aria-label="Type the highlighted text"
+        aria-describedby="message"
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+      >
+      <button type="button" id="start" aria-label="Start a new typing round">Start</button>
+    </div>
+  </main>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="script.js"></script>
+  <script src="multiplayer.js"></script>
+
+</body>
+</html>
