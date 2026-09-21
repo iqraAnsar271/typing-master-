@@ -551,3 +551,51 @@ body {
 .opponent-progress {
   margin-top: 0.75rem;
 }
+.mp-countdown {
+  margin-top: 0.75rem;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #3ecf8e;
+  min-height: 1.6rem;
+}
+
+.race-timer {
+  text-align: center;
+  font-weight: 700;
+  color: #3ecf8e;
+  margin: 0.5rem 0;
+}
+.leaderboard-shell {
+  width: min(92vw, 760px);
+  margin: 1rem auto 3rem;
+  padding: 1.5rem;
+  background: #16211c;
+  border: 1px solid #2d4a3e;
+  border-radius: 16px;
+}
+
+.leaderboard-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.leaderboard-table th,
+.leaderboard-table td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #2d4a3e;
+  color: #f4f7f5;
+}
+
+.leaderboard-table th {
+  color: #3ecf8e;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+}
+
+.leaderboard-empty {
+  text-align: center;
+  color: #9db3aa;
+  padding: 2rem 0;
+}

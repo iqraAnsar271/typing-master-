@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leaderboard — Type Like Sherlock</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <nav class="site-nav">
+    <span class="nav-brand">TYPE LIKE SHERLOCK</span>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="practice.html" class="nav-link">Practice</a>
+      <a href="competition.html" class="nav-link">Competition</a>
+      <a href="leaderboard.html" class="nav-link nav-link-active">Leaderboard</a>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <p class="hero-eyebrow">Hall of Fame</p>
+    <h1 class="hero-heading">LEADERBOARD<span class="cursor">_</span></h1>
+    <p class="hero-tagline">Top scores from every player, across practice and competition.</p>
+  </header>
+
+  <main class="leaderboard-shell" id="leaderboard-shell">
+    <table class="leaderboard-table">
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Name</th>
+          <th>Best WPM</th>
+          <th>Best Accuracy</th>
+          <th>Mode</th>
+        </tr>
+      </thead>
+      <tbody id="leaderboard-body"></tbody>
+    </table>
+    <p id="leaderboard-empty" class="leaderboard-empty" style="display: none;">No scores yet — go play a round on the Practice page!</p>
+  </main>
+
+  <script src="leaderboard.js"></script>
+</body>
+</html>

@@ -3,44 +3,34 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Competition — Type Like Sherlock</title>
+  <title>Practice — Type Like Sherlock</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
   <nav class="site-nav">
-  <span class="nav-brand">TYPE LIKE SHERLOCK</span>
-  <div class="nav-links">
-    <a href="index.html" class="nav-link">Home</a>
-    <a href="practice.html" class="nav-link">Practice</a>
-    <a href="competition.html" class="nav-link nav-link-active">Competition</a>
-    <a href="leaderboard.html" class="nav-link">Leaderboard</a>
-  </div>
-</nav>
-
-  <section class="multiplayer-panel" id="multiplayer-panel">
-    <p class="mp-eyebrow">Competition Mode</p>
-    <h2 class="mp-heading">RACE A FRIEND<span class="cursor">_</span></h2>
-    <p class="mp-tagline">Same quote, same clock. Whoever deduces fastest wins.</p>
-
-    <div class="mp-card">
-      <input type="text" id="mp-name" placeholder="Your name" autocomplete="off">
-      <div class="mp-actions">
-        <button type="button" id="mp-create">Create Room</button>
-        <input type="text" id="mp-room-code" placeholder="Room code" maxlength="4" autocomplete="off">
-        <button type="button" id="mp-join">Join Room</button>
-      </div>
-      <p id="mp-status" class="mp-status"></p>
-      <div id="mp-countdown" class="mp-countdown"></div>
-      <ul id="mp-players" class="mp-players"></ul>
+    <span class="nav-brand">TYPE LIKE SHERLOCK</span>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="practice.html" class="nav-link nav-link-active">Practice</a>
+      <a href="competition.html" class="nav-link">Competition</a>
+      <a href="leaderboard.html" class="nav-link">Leaderboard</a>
     </div>
-  </section>
+  </nav>
+
+  <header class="hero">
+    <p class="hero-eyebrow">Practice Mode</p>
+    <h1 class="hero-heading">SOLO PRACTICE<span class="cursor">_</span></h1>
+    <div class="player-bar">
+      <input type="text" id="player-name" placeholder="Enter your name" aria-label="Your name" autocomplete="off">
+      <p class="best-score" id="best-score-display"></p>
+    </div>
+  </header>
 
   <main class="game-shell" id="game-shell" data-difficulty="easy">
     <header class="top-bar">
       <div>
-        <h1>Race track</h1>
-        <p class="intro">Join a room above, then wait for both players to be ready.</p>
+        <h1>Typing game!</h1>
+        <p class="intro">Practice your typing skills with a quote from Sherlock Holmes. Click start to begin!</p>
       </div>
       <div class="difficulty-panel" aria-live="polite">
         <span class="difficulty-label">Difficulty</span>
@@ -65,7 +55,6 @@
     <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Quote completion progress">
       <div class="progress-fill" id="progress-fill"></div>
     </div>
-    <p id="race-timer" class="race-timer"></p>
     <p id="quote" class="quote" aria-live="polite" aria-label="Quote to type"></p>
     <p id="message" class="message" role="status" aria-live="polite" aria-atomic="true"></p>
 
@@ -85,9 +74,6 @@
     </div>
   </main>
 
-  <script src="/socket.io/socket.io.js"></script>
   <script src="script.js"></script>
-  <script src="multiplayer.js"></script>
-
 </body>
 </html>

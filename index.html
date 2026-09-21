@@ -3,77 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Typing game</title>
+  <title>Type Like Sherlock</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <nav class="site-nav">
     <span class="nav-brand">TYPE LIKE SHERLOCK</span>
     <div class="nav-links">
-      <a href="index.html" class="nav-link nav-link-active">Practice</a>
+      <a href="index.html" class="nav-link nav-link-active">Home</a>
+      <a href="practice.html" class="nav-link">Practice</a>
       <a href="competition.html" class="nav-link">Competition</a>
+      <a href="leaderboard.html" class="nav-link">Leaderboard</a>
     </div>
   </nav>
 
   <header class="hero">
-    <p class="hero-eyebrow">Practice Mode</p>
+    <p class="hero-eyebrow">Deduction Starts Here</p>
     <h1 class="hero-heading">TYPE LIKE SHERLOCK<span class="cursor">_</span></h1>
     <p class="hero-tagline">Deduction needs speed. Test your typing against the detective's own words.</p>
-    <div class="player-bar">
-      <input type="text" id="player-name" placeholder="Enter your name" aria-label="Your name" autocomplete="off">
-      <p class="best-score" id="best-score-display"></p>
-    </div>
-    <button type="button" class="hero-cta" id="hero-start">Start Typing →</button>
+    <a href="practice.html" class="hero-cta">Start Typing →</a>
   </header>
-
-  <main class="game-shell" id="game-shell" data-difficulty="easy">
-    <header class="top-bar">
-      <div>
-        <h1>Typing game!</h1>
-        <p class="intro">Practice your typing skills with a quote from Sherlock Holmes. Click start to begin!</p>
-      </div>
-      <div class="difficulty-panel" aria-live="polite">
-        <span class="difficulty-label">Difficulty</span>
-        <span id="difficulty-level" class="difficulty-badge easy" aria-label="Current difficulty level">Easy</span>
-      </div>
-    </header>
-
-    <div class="stats" aria-live="polite" role="status" aria-atomic="true">
-      <div class="stat-card">
-        <span class="stat-label">WPM</span>
-        <strong id="wpm-stat">0</strong>
-      </div>
-      <div class="stat-card">
-        <span class="stat-label">Accuracy</span>
-        <strong id="accuracy-stat">100%</strong>
-      </div>
-      <div class="stat-card">
-        <span class="stat-label">Streak</span>
-        <strong id="streak-stat">0</strong>
-      </div>
-    </div>
-    <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Quote completion progress">
-      <div class="progress-fill" id="progress-fill"></div>
-    </div>
-    <p id="quote" class="quote" aria-live="polite" aria-label="Quote to type"></p>
-    <p id="message" class="message" role="status" aria-live="polite" aria-atomic="true"></p>
-
-    <div class="input-row">
-      <label class="sr-only" for="typed-value">Type the highlighted text</label>
-      <input
-        type="text"
-        id="typed-value"
-        aria-label="Type the highlighted text"
-        aria-describedby="message"
-        autocomplete="off"
-        autocorrect="off"
-        autocapitalize="off"
-        spellcheck="false"
-      >
-      <button type="button" id="start" aria-label="Start a new typing round">Start</button>
-    </div>
-  </main>
-
-  <script src="script.js"></script>
 </body>
 </html>
