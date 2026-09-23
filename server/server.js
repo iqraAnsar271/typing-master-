@@ -7,6 +7,9 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 
 const gameRoutes = require("./routes/gameRoutes");
+const authRoutes = require("./routes/authRoutes");
+const adminRoutes = require("./routes/adminRoutes");
+const User = require("./models/User");
 
 dotenv.config({ path: path.join(__dirname, ".env") });
 
@@ -24,6 +27,8 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "..")));
 app.use("/api", gameRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/admin", adminRoutes);
 
 const COUNTDOWN_SECONDS = 3;
 const RACE_DURATION_MS = 60000;
@@ -186,6 +191,19 @@ const startServer = async () => {
 
     await mongoose.connect(process.env.MONGO_URI);
     console.log("MongoDB connected");
+
+    // Seed default admin account if none exists
+    const adminExists = await User.findOne({ role: "admin" });
+    if (!adminExists) {
+      await User.create({
+        username: "admin",
+        email: "admin@typelikesherlock.com",
+        password: "admin123",
+        role: "admin",
+        avatar: "🛡️",
+      });
+      console.log("Default admin account created (admin@typelikesherlock.com / admin123)");
+    }
 
     server.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);

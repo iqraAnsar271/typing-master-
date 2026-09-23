@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — Type Like Sherlock</title>
+  <meta name="description" content="Your personal typing dashboard — view stats, recent scores, and track your typing progress.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-page="dashboard">
+  <canvas id="bg-canvas" aria-hidden="true"></canvas>
+
+  <nav class="site-nav">
+    <a href="index.html" class="nav-brand">TYPE LIKE SHERLOCK</a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="practice.html" class="nav-link">Practice</a>
+      <a href="competition.html" class="nav-link">Competition</a>
+      <a href="leaderboard.html" class="nav-link">Leaderboard</a>
+      <a href="profile.html" class="nav-link">Profile</a>
+    </div>
+  </nav>
+
+  <main class="dashboard-page">
+    <!-- Welcome Hero -->
+    <section class="dash-hero">
+      <div class="dash-hero-avatar" id="dash-avatar">🕵️‍♂️</div>
+      <div class="dash-hero-info">
+        <h1 class="dash-hero-greeting" id="dash-greeting">Welcome back, Detective</h1>
+        <p class="dash-hero-sub" id="dash-sub">Member since September 2026</p>
+      </div>
+      <div class="dash-hero-actions">
+        <a href="practice.html" class="dash-action-btn primary">▶ Start Practice</a>
+        <a href="leaderboard.html" class="dash-action-btn secondary">🏆 Leaderboard</a>
+      </div>
+    </section>
+
+    <!-- Stats Cards -->
+    <section class="dash-stats-grid">
+      <div class="dash-stat-card glow-amber">
+        <span class="dash-stat-icon">⚡</span>
+        <span class="dash-stat-value" id="dash-best-wpm">0</span>
+        <span class="dash-stat-label">Best WPM</span>
+      </div>
+      <div class="dash-stat-card glow-mint">
+        <span class="dash-stat-icon">📊</span>
+        <span class="dash-stat-value" id="dash-avg-wpm">0</span>
+        <span class="dash-stat-label">Average WPM</span>
+      </div>
+      <div class="dash-stat-card glow-blue">
+        <span class="dash-stat-icon">🎯</span>
+        <span class="dash-stat-value" id="dash-avg-acc">100%</span>
+        <span class="dash-stat-label">Accuracy</span>
+      </div>
+      <div class="dash-stat-card glow-purple">
+        <span class="dash-stat-icon">📝</span>
+        <span class="dash-stat-value" id="dash-total-tests">0</span>
+        <span class="dash-stat-label">Total Tests</span>
+      </div>
+    </section>
+
+    <!-- Recent Scores & Profile Edit -->
+    <div class="dash-grid-2col">
+      <!-- Recent Scores -->
+      <section class="dash-panel">
+        <h2 class="dash-panel-title">📜 Recent Activity</h2>
+        <div class="dash-activity-list" id="dash-activity-list">
+          <p class="dash-empty">Loading your recent tests...</p>
+        </div>
+      </section>
+
+      <!-- Profile Settings -->
+      <section class="dash-panel">
+        <h2 class="dash-panel-title">⚙️ Account Settings</h2>
+        <form class="dash-settings-form" id="dash-settings-form">
+          <div class="form-group">
+            <label for="dash-edit-username">Username</label>
+            <div class="input-wrapper">
+              <span class="input-icon">🕵️</span>
+              <input type="text" id="dash-edit-username" minlength="3" maxlength="24" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Avatar</label>
+            <div class="dash-avatar-picker" id="dash-avatar-picker"></div>
+          </div>
+          <div class="form-group">
+            <label for="dash-edit-password">New Password <small>(leave blank to keep current)</small></label>
+            <div class="input-wrapper">
+              <span class="input-icon">🔑</span>
+              <input type="password" id="dash-edit-password" minlength="6" placeholder="Optional">
+            </div>
+          </div>
+          <div class="dash-settings-actions">
+            <button type="submit" class="dash-action-btn primary">💾 Save Changes</button>
+            <button type="button" class="dash-action-btn danger" id="dash-logout">🚪 Logout</button>
+          </div>
+          <div class="auth-message" id="dash-message" role="alert" style="display:none;"></div>
+        </form>
+      </section>
+    </div>
+  </main>
+
+  <script src="bg-animations.js"></script>
+  <script src="auth.js"></script>
+  <script src="dashboard.js"></script>
+</body>
+</html>

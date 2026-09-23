@@ -1,4 +1,5 @@
 const express = require("express");
+const jwt = require("jsonwebtoken");
 const Score = require("../models/Score");
 
 const router = express.Router();
@@ -14,7 +15,23 @@ router.get("/scores", async (req, res) => {
 
 router.post("/scores", async (req, res) => {
   try {
+    // Optionally extract userId from JWT if the user is logged in
+    let userId = null;
+    if (
+      req.headers.authorization &&
+      req.headers.authorization.startsWith("Bearer")
+    ) {
+      try {
+        const token = req.headers.authorization.split(" ")[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        userId = decoded.id;
+      } catch (e) {
+        // Token invalid — still allow anonymous score submission
+      }
+    }
+
     const score = await Score.create({
+      userId,
       username: String(req.body.username || "Player 1").trim().slice(0, 24),
       wpm: Number(req.body.wpm),
       accuracy: Number(req.body.accuracy),
