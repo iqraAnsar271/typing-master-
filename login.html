@@ -14,13 +14,13 @@
   <canvas id="bg-canvas" aria-hidden="true"></canvas>
 
   <nav class="site-nav">
-    <a href="index.html" class="nav-brand">TYPE LIKE SHERLOCK</a>
+    <a href="index" class="nav-brand">TYPE LIKE SHERLOCK</a>
     <div class="nav-links">
-      <a href="index.html" class="nav-link">Home</a>
-      <a href="practice.html" class="nav-link">Practice</a>
-      <a href="competition.html" class="nav-link">Competition</a>
-      <a href="leaderboard.html" class="nav-link">Leaderboard</a>
-      <a href="profile.html" class="nav-link">Profile</a>
+      <a href="index" class="nav-link">Home</a>
+      <a href="practice" class="nav-link">Practice</a>
+      <a href="competition" class="nav-link">Competition</a>
+      <a href="leaderboard" class="nav-link">Leaderboard</a>
+      <a href="profile" class="nav-link">Profile</a>
     </div>
   </nav>
 
@@ -114,7 +114,7 @@
     (() => {
       // If already logged in, redirect
       if (Auth.isLoggedIn()) {
-        window.location.href = Auth.isAdmin() ? "admin.html" : "dashboard.html";
+        window.location.href = Auth.isAdmin() ? "admin" : "dashboard";
         return;
       }
 
@@ -189,7 +189,7 @@
 
           showMessage("Login successful! Redirecting...", "success");
           setTimeout(() => {
-            window.location.href = data.role === "admin" ? "admin.html" : "dashboard.html";
+            window.location.href = data.role === "admin" ? "admin" : "dashboard";
           }, 600);
         } catch (err) {
           showMessage(err.message);
@@ -218,7 +218,7 @@
           await Auth.register(username, email, password);
           showMessage("Account created! Redirecting...", "success");
           setTimeout(() => {
-            window.location.href = "dashboard.html";
+            window.location.href = "dashboard";
           }, 600);
         } catch (err) {
           showMessage(err.message);

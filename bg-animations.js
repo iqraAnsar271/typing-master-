@@ -67,154 +67,189 @@
   const pageAttr = document.body.dataset.page || '';
   const PAGE = (bodyClass + ' ' + pageAttr).toLowerCase();
 
-  /* ════════════════════════════════════════════════════════════════════
-     1. COMPETITION — Kinetic Velocity Stream & Precision HUD Telemetry
-     Sleek, dark, high-speed telemetry lines with glowing heads,
-     kinetic depth streams, and subtle precision HUD markers.
-     ════════════════════════════════════════════════════════════════════ */
   if (PAGE.includes('competition')) {
+    // ════════════════════════════════════════════════════════════════════
+    // COMPETITION — Deep Space Nebula & Twinkling Starfield
+    // Soft, organic glowing nebula clouds with gentle color shifts,
+    // layered twinkling stars, and mouse-reactive light bloom.
+    // ════════════════════════════════════════════════════════════════════
 
-    const STREAMS_COUNT = Math.min(65, Math.floor(width / 22));
-    const streams = [];
+    let time = 0;
 
-    // Subtle coordinate tick marks
-    const hudTicks = [];
-    const TICK_ROWS = 4;
-    const TICK_COLS = 6;
-    for (let r = 0; r < TICK_ROWS; r++) {
-      for (let c = 0; c < TICK_COLS; c++) {
-        hudTicks.push({
-          relX: (c + 0.5) / TICK_COLS + rand(-0.02, 0.02),
-          relY: (r + 0.5) / TICK_ROWS + rand(-0.02, 0.02),
-          alpha: rand(0.04, 0.12),
-          pulseSpeed: rand(0.01, 0.03),
-          phase: rand(0, Math.PI * 2)
-        });
-      }
+    // ── Twinkling Stars ──
+    const stars = [];
+    const STAR_COUNT = Math.min(180, Math.floor(width * height / 6000));
+
+    for (let i = 0; i < STAR_COUNT; i++) {
+      stars.push({
+        x: rand(0, width),
+        y: rand(0, height),
+        radius: rand(0.4, 1.6),
+        baseAlpha: rand(0.15, 0.7),
+        twinkleSpeed: rand(0.008, 0.04),
+        phase: rand(0, Math.PI * 2),
+        hue: randInt(0, 1) === 0 ? rand(190, 240) : rand(30, 55) // blue-ish or warm
+      });
     }
 
-    class VelocityStream {
-      constructor() { this.reset(true); }
-      reset(initial) {
-        this.x = initial ? rand(0, width) : -rand(50, 200);
-        this.y = rand(0, height);
-        this.length = rand(80, 260);
-        this.speed = rand(1.8, 5.5);
-        this.thickness = rand(0.8, 2.0);
-        this.alpha = rand(0.12, 0.45);
-        this.laneDrift = rand(-0.04, 0.04);
-        
-        // Color distribution: high-end gold / cyber coral / neon mint
-        const roll = Math.random();
-        if (roll < 0.60) {
-          this.color = [232, 168, 56];    // Amber Gold
-        } else if (roll < 0.85) {
-          this.color = [255, 107, 117];  // Cyber Crimson
-        } else {
-          this.color = [74, 234, 170];   // Neon Mint
-        }
+    // ── Nebula Clouds (large soft radial blobs) ──
+    const clouds = [];
+    const CLOUD_COUNT = 6;
+    const nebulaColors = [
+      { h: 280, s: 70, l: 40 },  // deep purple
+      { h: 210, s: 60, l: 35 },  // ocean blue
+      { h: 340, s: 55, l: 35 },  // rose
+      { h: 175, s: 50, l: 30 },  // teal
+      { h: 250, s: 65, l: 30 },  // indigo
+      { h: 15,  s: 60, l: 35 },  // warm ember
+    ];
+
+    for (let i = 0; i < CLOUD_COUNT; i++) {
+      const c = nebulaColors[i % nebulaColors.length];
+      clouds.push({
+        x: rand(width * 0.1, width * 0.9),
+        y: rand(height * 0.15, height * 0.85),
+        radius: rand(180, 380),
+        baseAlpha: rand(0.025, 0.055),
+        driftX: rand(-0.08, 0.08),
+        driftY: rand(-0.05, 0.05),
+        breathSpeed: rand(0.003, 0.008),
+        breathPhase: rand(0, Math.PI * 2),
+        hsl: c
+      });
+    }
+
+    // ── Shooting stars (rare, dramatic) ──
+    const shootingStars = [];
+
+    class ShootingStar {
+      constructor() { this.reset(); this.alive = false; }
+      reset() {
+        this.x = rand(-100, width * 0.6);
+        this.y = rand(-50, height * 0.3);
+        this.angle = rand(0.3, 0.8); // mostly diagonal down-right
+        this.speed = rand(8, 16);
+        this.length = rand(60, 140);
+        this.life = 0;
+        this.maxLife = rand(40, 80);
+        this.alive = true;
       }
       update() {
-        this.x += this.speed;
-        this.y += this.laneDrift;
-
-        // Mouse avoidance/acceleration effect
-        if (mouse.active) {
-          const dx = this.x - mouse.x;
-          const dy = this.y - mouse.y;
-          const distSq = dx * dx + dy * dy;
-          if (distSq < 22500) { // 150px radius
-            const factor = (1 - Math.sqrt(distSq) / 150);
-            this.x += factor * 2;
-          }
-        }
-
-        if (this.x - this.length > width) {
-          this.reset(false);
+        if (!this.alive) return;
+        this.x += Math.cos(this.angle) * this.speed;
+        this.y += Math.sin(this.angle) * this.speed;
+        this.life++;
+        if (this.life > this.maxLife || this.x > width + 100 || this.y > height + 100) {
+          this.alive = false;
         }
       }
       draw() {
-        const [r, g, b] = this.color;
-        
-        // Head glow
-        const headX = this.x;
-        const tailX = this.x - this.length;
+        if (!this.alive) return;
+        const progress = this.life / this.maxLife;
+        const fadeAlpha = progress < 0.3 ? progress / 0.3 : 1 - ((progress - 0.3) / 0.7);
+        const alpha = Math.max(0, fadeAlpha * 0.7);
+        const tailX = this.x - Math.cos(this.angle) * this.length;
+        const tailY = this.y - Math.sin(this.angle) * this.length;
 
-        const grad = ctx.createLinearGradient(tailX, this.y, headX, this.y);
-        grad.addColorStop(0, `rgba(${r}, ${g}, ${b}, 0)`);
-        grad.addColorStop(0.7, `rgba(${r}, ${g}, ${b}, ${this.alpha * 0.4})`);
-        grad.addColorStop(1, `rgba(${r}, ${g}, ${b}, ${this.alpha})`);
+        const grad = ctx.createLinearGradient(tailX, tailY, this.x, this.y);
+        grad.addColorStop(0, `rgba(255, 255, 255, 0)`);
+        grad.addColorStop(0.6, `rgba(200, 220, 255, ${alpha * 0.3})`);
+        grad.addColorStop(1, `rgba(255, 255, 255, ${alpha})`);
 
         ctx.beginPath();
-        ctx.moveTo(tailX, this.y);
-        ctx.lineTo(headX, this.y);
+        ctx.moveTo(tailX, tailY);
+        ctx.lineTo(this.x, this.y);
         ctx.strokeStyle = grad;
-        ctx.lineWidth = this.thickness;
+        ctx.lineWidth = 1.5;
         ctx.lineCap = 'round';
         ctx.stroke();
 
-        // Glowing particle at the head
+        // tiny bright head
         ctx.beginPath();
-        ctx.arc(headX, this.y, this.thickness * 1.4, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${Math.min(1, this.alpha * 1.8)})`;
+        ctx.arc(this.x, this.y, 1.5, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
         ctx.fill();
-
-        // Subtle ambient blur aura on head
-        if (this.thickness > 1.4) {
-          ctx.beginPath();
-          ctx.arc(headX, this.y, this.thickness * 3.5, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${this.alpha * 0.15})`;
-          ctx.fill();
-        }
       }
     }
 
-    for (let i = 0; i < STREAMS_COUNT; i++) {
-      streams.push(new VelocityStream());
-    }
+    for (let i = 0; i < 3; i++) shootingStars.push(new ShootingStar());
 
-    let frame = 0;
     function animateCompetition() {
-      frame++;
+      time += 1;
       updateMouse();
       ctx.clearRect(0, 0, width, height);
 
-      // 1. Precision HUD Coordinates Grid
-      for (const t of hudTicks) {
-        t.phase += t.pulseSpeed;
-        const currentAlpha = t.alpha * (0.6 + 0.4 * Math.sin(t.phase));
-        const px = t.relX * width;
-        const py = t.relY * height;
-        const size = 4;
+      // 1. Nebula clouds — soft radial gradients that breathe
+      for (const cloud of clouds) {
+        cloud.x += cloud.driftX;
+        cloud.y += cloud.driftY;
+        cloud.breathPhase += cloud.breathSpeed;
 
-        ctx.strokeStyle = `rgba(170, 188, 205, ${currentAlpha})`;
-        ctx.lineWidth = 0.75;
-        
-        // Minimalist Crosshair (+)
-        ctx.beginPath();
-        ctx.moveTo(px - size, py);
-        ctx.lineTo(px + size, py);
-        ctx.moveTo(px, py - size);
-        ctx.lineTo(px, py + size);
-        ctx.stroke();
+        // Wrap around gently
+        if (cloud.x < -cloud.radius) cloud.x = width + cloud.radius * 0.5;
+        if (cloud.x > width + cloud.radius) cloud.x = -cloud.radius * 0.5;
+        if (cloud.y < -cloud.radius) cloud.y = height + cloud.radius * 0.5;
+        if (cloud.y > height + cloud.radius) cloud.y = -cloud.radius * 0.5;
+
+        const breathScale = 0.85 + 0.15 * Math.sin(cloud.breathPhase);
+        const r = cloud.radius * breathScale;
+        const a = cloud.baseAlpha * (0.7 + 0.3 * Math.sin(cloud.breathPhase * 0.7));
+        const { h, s, l } = cloud.hsl;
+
+        const grad = ctx.createRadialGradient(cloud.x, cloud.y, 0, cloud.x, cloud.y, r);
+        grad.addColorStop(0, `hsla(${h}, ${s}%, ${l + 15}%, ${a})`);
+        grad.addColorStop(0.4, `hsla(${h}, ${s}%, ${l}%, ${a * 0.6})`);
+        grad.addColorStop(1, `hsla(${h}, ${s}%, ${l - 10}%, 0)`);
+
+        ctx.fillStyle = grad;
+        ctx.fillRect(cloud.x - r, cloud.y - r, r * 2, r * 2);
       }
 
-      // 2. Telemetry horizontal guideline tracks
-      ctx.strokeStyle = 'rgba(232, 168, 56, 0.025)';
-      ctx.lineWidth = 1;
-      ctx.setLineDash([4, 20]);
-      for (let y = 80; y < height; y += 140) {
-        ctx.beginPath();
-        ctx.moveTo(0, y);
-        ctx.lineTo(width, y);
-        ctx.stroke();
+      // 2. Mouse-reactive light bloom
+      if (mouse.active) {
+        const bloomGrad = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 200);
+        bloomGrad.addColorStop(0, 'rgba(180, 160, 255, 0.04)');
+        bloomGrad.addColorStop(0.5, 'rgba(140, 120, 220, 0.015)');
+        bloomGrad.addColorStop(1, 'rgba(100, 80, 180, 0)');
+        ctx.fillStyle = bloomGrad;
+        ctx.fillRect(mouse.x - 200, mouse.y - 200, 400, 400);
       }
-      ctx.setLineDash([]); // Reset dash
 
-      // 3. Velocity Streams
-      for (const s of streams) {
-        s.update();
-        s.draw();
+      // 3. Twinkling stars
+      for (const star of stars) {
+        star.phase += star.twinkleSpeed;
+        const twinkle = 0.4 + 0.6 * Math.abs(Math.sin(star.phase));
+        const a = star.baseAlpha * twinkle;
+
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${star.hue}, 30%, 90%, ${a})`;
+        ctx.fill();
+
+        // Subtle cross-flare on brighter stars
+        if (star.radius > 1.0 && twinkle > 0.8) {
+          const flareLen = star.radius * 4;
+          const flareAlpha = a * 0.3;
+          ctx.strokeStyle = `hsla(${star.hue}, 20%, 95%, ${flareAlpha})`;
+          ctx.lineWidth = 0.5;
+          ctx.beginPath();
+          ctx.moveTo(star.x - flareLen, star.y);
+          ctx.lineTo(star.x + flareLen, star.y);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(star.x, star.y - flareLen);
+          ctx.lineTo(star.x, star.y + flareLen);
+          ctx.stroke();
+        }
+      }
+
+      // 4. Occasional shooting stars
+      for (const ss of shootingStars) {
+        if (!ss.alive && Math.random() < 0.003) {
+          ss.reset();
+        }
+        ss.update();
+        ss.draw();
       }
 
       if (!reducedMotion) requestAnimationFrame(animateCompetition);
@@ -222,12 +257,6 @@
 
     animateCompetition();
   }
-
-  /* ════════════════════════════════════════════════════════════════════
-     2. LEADERBOARD — Executive Luminous Aurora Waves & Prestige Grid
-     Harmonic, silky multi-layer sine waves flowing with mathematical
-     elegance, accompanied by golden celestial micro-sparkles.
-     ════════════════════════════════════════════════════════════════════ */
   else if (PAGE.includes('leaderboard')) {
 
     const waves = [

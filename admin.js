@@ -6,7 +6,7 @@
 (function () {
   // Guard: redirect if not admin
   if (!Auth.isLoggedIn() || !Auth.isAdmin()) {
-    window.location.href = Auth.isLoggedIn() ? "dashboard.html" : "login.html";
+    window.location.href = Auth.isLoggedIn() ? "dashboard" : "login";
     return;
   }
 

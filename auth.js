@@ -46,7 +46,7 @@ const Auth = (() => {
   function logout() {
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(USER_KEY);
-    window.location.href = "login.html";
+    window.location.href = "login";
   }
 
   function authHeaders() {
@@ -111,14 +111,14 @@ const Auth = (() => {
       const user = getUser();
 
       const dashLink = document.createElement("a");
-      dashLink.href = "dashboard.html";
+      dashLink.href = "dashboard";
       dashLink.className = "nav-link nav-auth-link";
       dashLink.textContent = "Dashboard";
       navLinks.appendChild(dashLink);
 
       if (isAdmin()) {
         const adminLink = document.createElement("a");
-        adminLink.href = "admin.html";
+        adminLink.href = "admin";
         adminLink.className = "nav-link nav-auth-link";
         adminLink.textContent = "Admin";
         navLinks.appendChild(adminLink);
@@ -135,7 +135,7 @@ const Auth = (() => {
       navLinks.appendChild(logoutLink);
     } else {
       const loginLink = document.createElement("a");
-      loginLink.href = "login.html";
+      loginLink.href = "login";
       loginLink.className = "nav-link nav-auth-link";
       loginLink.textContent = "Login";
       navLinks.appendChild(loginLink);

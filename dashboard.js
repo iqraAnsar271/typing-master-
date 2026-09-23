@@ -8,7 +8,7 @@
 
   // Guard: redirect to login if not authenticated
   if (!Auth.isLoggedIn()) {
-    window.location.href = "login.html";
+    window.location.href = "login";
     return;
   }
 
@@ -52,7 +52,7 @@
   function renderActivity(scores) {
     const list = document.getElementById("dash-activity-list");
     if (!scores || scores.length === 0) {
-      list.innerHTML = `<p class="dash-empty">No tests completed yet. <a href="practice.html">Start typing!</a></p>`;
+      list.innerHTML = `<p class="dash-empty">No tests completed yet. <a href="practice">Start typing!</a></p>`;
       return;
     }
 
