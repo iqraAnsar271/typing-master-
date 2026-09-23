@@ -53,7 +53,11 @@
     // Inner Glass Card
     ctx.fillStyle = 'rgba(20, 26, 40, 0.7)';
     ctx.beginPath();
-    ctx.roundRect(60, 60, 1080, 510, 24);
+    if (typeof ctx.roundRect === 'function') {
+      ctx.roundRect(60, 60, 1080, 510, 24);
+    } else {
+      ctx.rect(60, 60, 1080, 510);
+    }
     ctx.fill();
     ctx.strokeStyle = 'rgba(255, 184, 0, 0.3)';
     ctx.lineWidth = 2;
@@ -109,7 +113,11 @@
     // Quote Box Footer
     ctx.fillStyle = 'rgba(10, 15, 25, 0.6)';
     ctx.beginPath();
-    ctx.roundRect(100, 460loop ? 460 : 460, 1000, 80, 12);
+    if (typeof ctx.roundRect === 'function') {
+      ctx.roundRect(100, 460, 1000, 80, 12);
+    } else {
+      ctx.rect(100, 460, 1000, 80);
+    }
     ctx.fill();
 
     ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
