@@ -3,10 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Type Like Sherlock — Test your typing speed with quotes from the world's greatest detective.">
   <title>Type Like Sherlock</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="page-home">
+  <canvas id="bg-canvas" aria-hidden="true"></canvas>
+
   <nav class="site-nav">
     <span class="nav-brand">TYPE LIKE SHERLOCK</span>
     <div class="nav-links">
@@ -14,6 +20,7 @@
       <a href="practice.html" class="nav-link">Practice</a>
       <a href="competition.html" class="nav-link">Competition</a>
       <a href="leaderboard.html" class="nav-link">Leaderboard</a>
+      <a href="profile.html" class="nav-link">Profile</a>
     </div>
   </nav>
 
@@ -23,5 +30,7 @@
     <p class="hero-tagline">Deduction needs speed. Test your typing against the detective's own words.</p>
     <a href="practice.html" class="hero-cta">Start Typing →</a>
   </header>
+
+  <script src="bg-animations.js"></script>
 </body>
 </html>

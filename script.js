@@ -49,7 +49,9 @@ const gameState = {
   typedValuePrevious: '',
   currentDifficultyIndex: 0,
   goodPerformanceStreak: 0,
-  roundInProgress: false
+  roundInProgress: false,
+  currentRecording: [],
+  currentQuote: ''
 };
 
 const ui = {
@@ -145,12 +147,23 @@ function updateStats() {
 
 function getPlayerStats(name) {
   const allStats = JSON.parse(localStorage.getItem('typingGameStats') || '{}');
-  return allStats[name] || { bestWpm: 0, bestAccuracy: 0, roundsPlayed: 0, difficultyIndex: 0 };
+  return allStats[name] || { bestWpm: 0, bestAccuracy: 0, roundsPlayed: 0, difficultyIndex: 0, history: [] };
 }
 
 function savePlayerStats(name, stats) {
   const allStats = JSON.parse(localStorage.getItem('typingGameStats') || '{}');
-  allStats[name] = stats;
+  const existing = allStats[name] || {};
+  const history = existing.history || [];
+
+  if (stats.lastRound) {
+    history.push(stats.lastRound);
+  }
+
+  allStats[name] = {
+    ...existing,
+    ...stats,
+    history: history
+  };
   localStorage.setItem('typingGameStats', JSON.stringify(allStats));
 }
 
@@ -196,6 +209,8 @@ function renderQuote() {
   gameState.totalCorrectChars = 0;
   gameState.totalIncorrectChars = 0;
   gameState.typedValuePrevious = '';
+  gameState.currentRecording = [];
+  gameState.currentQuote = quote;
 
   const wordsHtml = gameState.words
     .map((word) => {
@@ -206,6 +221,7 @@ function renderQuote() {
 
   ui.quoteElement.innerHTML = wordsHtml;
   highlightCurrentWord();
+  startGhostRace(quote);
 }
 function updateCharHighlighting() {
   const wordElements = ui.quoteElement.querySelectorAll('.word');
@@ -221,6 +237,15 @@ function updateCharHighlighting() {
       el.classList.add(typedValue[i] === el.textContent ? 'char-correct' : 'char-incorrect');
     }
   });
+
+  // Next key highlighting for touch keyboard
+  if (window.VirtualKeyboard && typeof window.VirtualKeyboard.highlightNextKey === 'function') {
+    let nextChar = ' ';
+    if (typedValue.length < charEls.length) {
+      nextChar = charEls[typedValue.length].textContent;
+    }
+    window.VirtualKeyboard.highlightNextKey(nextChar);
+  }
 }
 function highlightCurrentWord() {
   if (!ui.quoteElement) {
@@ -291,6 +316,7 @@ function finishRound() {
   }
 
   gameState.roundInProgress = false;
+  stopGhostRace();
 
   if (meetsTarget) {
     gameState.goodPerformanceStreak += 1;
@@ -309,16 +335,72 @@ function finishRound() {
 
   // Save this player's stats (best scores + current difficulty) if a name is entered
   const nameInput = document.getElementById('player-name');
-  if (nameInput && nameInput.value.trim()) {
-    const name = nameInput.value.trim();
-    const existingStats = getPlayerStats(name);
-    savePlayerStats(name, {
-      bestWpm: Math.max(existingStats.bestWpm, wpm),
-      bestAccuracy: Math.max(existingStats.bestAccuracy, accuracy),
-      roundsPlayed: existingStats.roundsPlayed + 1,
-      difficultyIndex: gameState.currentDifficultyIndex
+  let roundsPlayed = 0;
+  const playerName = (nameInput && nameInput.value.trim()) ? nameInput.value.trim() : 'Player 1';
+  const existingStats = getPlayerStats(playerName);
+  roundsPlayed = existingStats.roundsPlayed + 1;
+
+  savePlayerStats(playerName, {
+    bestWpm: Math.max(existingStats.bestWpm, wpm),
+    bestAccuracy: Math.max(existingStats.bestAccuracy, accuracy),
+    roundsPlayed: roundsPlayed,
+    difficultyIndex: gameState.currentDifficultyIndex,
+    badges: existingStats.badges || [],
+    lastRound: {
+      date: new Date().toLocaleDateString(),
+      wpm: wpm,
+      accuracy: accuracy,
+      mode: 'Practice'
+    }
+  });
+  updateBestScoreDisplay();
+
+  // Save ghost run (best per quote)
+  saveGhostRun(gameState.currentQuote, gameState.currentRecording, wpm, accuracy);
+
+  // Save replay data
+  if (typeof saveReplayData === 'function') {
+    saveReplayData(gameState.currentRecording, gameState.currentQuote, wpm, accuracy);
+  }
+
+  // Show Share Card button
+  const shareBtn = document.getElementById('share-btn');
+  if (shareBtn) {
+    shareBtn.style.display = 'inline-block';
+    shareBtn.onclick = () => {
+      if (window.ShareCard && typeof window.ShareCard.showModal === 'function') {
+        window.ShareCard.showModal({
+          wpm: wpm,
+          accuracy: accuracy,
+          mode: 'Practice',
+          quote: gameState.currentQuote
+        });
+      }
+    };
+  }
+
+  // Refresh heatmap
+  if (typeof refreshHeatmap === 'function') {
+    refreshHeatmap();
+  }
+
+  // Check achievement badges
+  if (typeof checkBadges === 'function') {
+    const dailyStreak = (typeof getDailyStreak === 'function') ? getDailyStreak() : 0;
+    checkBadges({
+      wpm: wpm,
+      accuracy: accuracy,
+      difficultyId: currentDifficulty.id,
+      difficultyIndex: gameState.currentDifficultyIndex,
+      streak: gameState.goodPerformanceStreak,
+      roundsPlayed: roundsPlayed,
+      dailyStreak: dailyStreak
     });
-    updateBestScoreDisplay();
+  }
+
+  // Daily challenge hook
+  if (typeof finishDailyChallenge === 'function') {
+    finishDailyChallenge(wpm, accuracy);
   }
 }
 
@@ -379,7 +461,8 @@ function handleTypingInput() {
   const addedChars = typedValue.slice(previousValue.length);
 
   if (addedChars.length > 0) {
-    if (currentWord.startsWith(typedValue)) {
+    const isCorrectSoFar = currentWord.startsWith(typedValue);
+    if (isCorrectSoFar) {
       gameState.totalCorrectChars += addedChars.length;
       ui.typedValueElement.classList.remove('error');
       ui.typedValueElement.classList.add('correct');
@@ -387,6 +470,26 @@ function handleTypingInput() {
       gameState.totalIncorrectChars += addedChars.length;
       ui.typedValueElement.classList.remove('correct');
       ui.typedValueElement.classList.add('error');
+    }
+
+    // Record keystrokes for replay + heatmap
+    for (let i = 0; i < addedChars.length; i++) {
+      const charIdx = previousValue.length + i;
+      const expected = currentWord[charIdx] || '';
+      const typed = addedChars[i];
+      const isCorrect = expected === typed;
+
+      gameState.currentRecording.push({
+        char: typed,
+        expected: expected,
+        correct: isCorrect,
+        time: Date.now() - gameState.startTime
+      });
+
+      // Feed heatmap
+      if (typeof recordKeyAccuracy === 'function') {
+        recordKeyAccuracy(expected, typed);
+      }
     }
   }
 
@@ -427,3 +530,69 @@ if (playerNameInput) {
 updateDifficultyDisplay();
 updateStats();
 setMessage('Press start to begin the first round.', 'info');
+
+/* ---------- Ghost Race ---------- */
+
+let ghostTimers = [];
+
+function hashQuote(quote) {
+  let hash = 0;
+  for (let i = 0; i < quote.length; i++) {
+    hash = ((hash << 5) - hash) + quote.charCodeAt(i);
+    hash = hash & hash;
+  }
+  return String(Math.abs(hash));
+}
+
+function getGhostRuns() {
+  return JSON.parse(localStorage.getItem('typingGhostRuns') || '{}');
+}
+
+function saveGhostRun(quote, recording, wpm, accuracy) {
+  if (!quote || !recording || recording.length === 0) return;
+  const runs = getGhostRuns();
+  const key = hashQuote(quote);
+  const existing = runs[key];
+  if (!existing || wpm > existing.wpm) {
+    runs[key] = { keystrokes: recording, wpm: wpm, accuracy: accuracy, quote: quote };
+    localStorage.setItem('typingGhostRuns', JSON.stringify(runs));
+  }
+}
+
+function startGhostRace(quote) {
+  stopGhostRace();
+  const ghostFill = document.getElementById('ghost-progress-fill');
+  const ghostLabel = document.getElementById('ghost-label');
+  if (!ghostFill) return;
+
+  const runs = getGhostRuns();
+  const key = hashQuote(quote);
+  const ghost = runs[key];
+
+  if (!ghost || !ghost.keystrokes || ghost.keystrokes.length === 0) {
+    ghostFill.style.width = '0%';
+    if (ghostLabel) ghostLabel.textContent = '';
+    return;
+  }
+
+  if (ghostLabel) ghostLabel.textContent = `Ghost: ${ghost.wpm} WPM, ${ghost.accuracy}%`;
+
+  const totalChars = ghost.quote.replace(/\s+/g, '').length;
+  let charsSoFar = 0;
+
+  for (const ks of ghost.keystrokes) {
+    if (ks.correct) {
+      charsSoFar++;
+      const pct = Math.round((charsSoFar / totalChars) * 100);
+      const t = setTimeout(() => {
+        ghostFill.style.width = `${pct}%`;
+      }, ks.time);
+      ghostTimers.push(t);
+    }
+  }
+}
+
+function stopGhostRace() {
+  for (const t of ghostTimers) clearTimeout(t);
+  ghostTimers = [];
+}

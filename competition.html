@@ -3,20 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Race a friend in real-time typing competition. Same quote, same clock — whoever types fastest wins.">
   <title>Competition — Type Like Sherlock</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="page-competition">
+  <canvas id="bg-canvas" aria-hidden="true"></canvas>
 
   <nav class="site-nav">
-  <span class="nav-brand">TYPE LIKE SHERLOCK</span>
-  <div class="nav-links">
-    <a href="index.html" class="nav-link">Home</a>
-    <a href="practice.html" class="nav-link">Practice</a>
-    <a href="competition.html" class="nav-link nav-link-active">Competition</a>
-    <a href="leaderboard.html" class="nav-link">Leaderboard</a>
-  </div>
-</nav>
+    <span class="nav-brand">TYPE LIKE SHERLOCK</span>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="practice.html" class="nav-link">Practice</a>
+      <a href="competition.html" class="nav-link nav-link-active">Competition</a>
+      <a href="leaderboard.html" class="nav-link">Leaderboard</a>
+      <a href="profile.html" class="nav-link">Profile</a>
+    </div>
+  </nav>
 
   <section class="multiplayer-panel" id="multiplayer-panel">
     <p class="mp-eyebrow">Competition Mode</p>
@@ -29,10 +35,19 @@
         <button type="button" id="mp-create">Create Room</button>
         <input type="text" id="mp-room-code" placeholder="Room code" maxlength="4" autocomplete="off">
         <button type="button" id="mp-join">Join Room</button>
+        <button type="button" id="mp-spectate" class="secondary-btn">👁️ Spectate Race</button>
       </div>
       <p id="mp-status" class="mp-status"></p>
       <div id="mp-countdown" class="mp-countdown"></div>
       <ul id="mp-players" class="mp-players"></ul>
+    </div>
+  </section>
+
+  <!-- Spectator View Container -->
+  <section class="spectator-section" id="spectator-section" style="display:none;">
+    <div class="spectator-view" id="spectator-view"></div>
+    <div class="spectator-actions" style="text-align: center; margin-top: 1.5rem;">
+      <button type="button" id="spectator-exit-btn" class="hero-cta secondary">Exit Spectator Mode</button>
     </div>
   </section>
 
@@ -88,6 +103,34 @@
   <script src="/socket.io/socket.io.js"></script>
   <script src="script.js"></script>
   <script src="multiplayer.js"></script>
+  <script src="spectator.js"></script>
+  <script src="bg-animations.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const specBtn = document.getElementById('mp-spectate');
+      const exitBtn = document.getElementById('spectator-exit-btn');
+      const specSec = document.getElementById('spectator-section');
+      const gameShell = document.getElementById('game-shell');
+      const mpPanel = document.getElementById('multiplayer-panel');
 
+      if (specBtn) {
+        specBtn.addEventListener('click', () => {
+          specSec.style.display = 'block';
+          gameShell.style.display = 'none';
+          mpPanel.style.display = 'none';
+          if (window.Spectator) window.Spectator.start();
+        });
+      }
+
+      if (exitBtn) {
+        exitBtn.addEventListener('click', () => {
+          specSec.style.display = 'none';
+          gameShell.style.display = 'block';
+          mpPanel.style.display = 'block';
+          if (window.Spectator) window.Spectator.stop();
+        });
+      }
+    });
+  </script>
 </body>
 </html>

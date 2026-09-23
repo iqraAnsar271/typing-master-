@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Profile — Type Like Sherlock</title>
+  <meta name="description" content="View your personal typing stats history, customize your avatar, and track your typing progress.">
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body data-page="profile">
+  <canvas id="bg-canvas"></canvas>
+
+  <header class="top-nav">
+    <div class="nav-brand">
+      <span class="brand-icon">🔍</span>
+      <span class="brand-title">Type Like Sherlock</span>
+    </div>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="practice.html">Practice</a>
+      <a href="competition.html">Competition</a>
+      <a href="leaderboard.html">Leaderboard</a>
+      <a href="profile.html" class="active">Profile</a>
+    </nav>
+  </header>
+
+  <main class="page-container profile-container">
+    <!-- User Profile Header Card -->
+    <section class="profile-header-card">
+      <div class="profile-avatar-wrapper">
+        <div class="avatar-large" id="profile-avatar-display">🕵️‍♂️</div>
+        <div class="avatar-picker-popover">
+          <span class="avatar-picker-label">Choose Avatar</span>
+          <div class="avatar-grid" id="avatar-grid"></div>
+        </div>
+      </div>
+
+      <div class="profile-info-details">
+        <div class="name-edit-group">
+          <input type="text" id="profile-name-input" class="profile-name-input" value="SherlockTypist" maxlength="20" title="Edit your name">
+          <span class="edit-icon">✏️</span>
+        </div>
+        <p class="profile-join-date" id="profile-join-date">Member since September 2026</p>
+      </div>
+    </section>
+
+    <!-- Stats Summary Grid -->
+    <section class="stats-summary-grid">
+      <div class="stat-card">
+        <span class="stat-icon">⚡</span>
+        <span class="stat-val" id="stat-best-wpm">0 WPM</span>
+        <span class="stat-lbl">Best WPM</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon">📊</span>
+        <span class="stat-val" id="stat-avg-wpm">0 WPM</span>
+        <span class="stat-lbl">Average WPM</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon">🎯</span>
+        <span class="stat-val" id="stat-avg-acc">100%</span>
+        <span class="stat-lbl">Accuracy Rate</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon">📝</span>
+        <span class="stat-val" id="stat-total-tests">0</span>
+        <span class="stat-lbl">Total Tests</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon">🔥</span>
+        <span class="stat-val" id="stat-streak">0 Days</span>
+        <span class="stat-lbl">Daily Streak</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon">🏆</span>
+        <span class="stat-val" id="stat-badges">0 / 6</span>
+        <span class="stat-lbl">Badges Earned</span>
+      </div>
+    </section>
+
+    <!-- Personal Stats History Log -->
+    <section class="history-section">
+      <h2 class="section-title">📜 Personal Race History</h2>
+      <div class="history-table-wrapper">
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Date</th>
+              <th>WPM</th>
+              <th>Accuracy</th>
+              <th>Mode</th>
+            </tr>
+          </thead>
+          <tbody id="history-tbody">
+            <tr><td colspan="5" class="empty-msg">Loading history...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="bg-animations.js"></script>
+  <script src="profile.js"></script>
+</body>
+</html>

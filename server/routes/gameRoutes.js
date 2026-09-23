@@ -19,6 +19,7 @@ router.post("/scores", async (req, res) => {
       wpm: Number(req.body.wpm),
       accuracy: Number(req.body.accuracy),
       mode: req.body.mode || "practice",
+      date: req.body.date || null,
     });
 
     res.status(201).json(score);
@@ -29,7 +30,11 @@ router.post("/scores", async (req, res) => {
 
 router.get("/leaderboard", async (req, res) => {
   try {
-    const scores = await Score.find()
+    const filter = {};
+    if (req.query.mode) filter.mode = req.query.mode;
+    if (req.query.date) filter.date = req.query.date;
+
+    const scores = await Score.find(filter)
       .sort({ wpm: -1, accuracy: -1, createdAt: 1 })
       .limit(100)
       .lean();

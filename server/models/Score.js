@@ -21,8 +21,12 @@ const scoreSchema = new mongoose.Schema(
     },
     mode: {
       type: String,
-      enum: ["practice", "competition"],
+      enum: ["practice", "competition", "daily"],
       default: "practice",
+    },
+    date: {
+      type: String,
+      default: null,
     },
   },
   { timestamps: true }
