@@ -32,34 +32,33 @@ all wrapped in a **cinematic dark-green design system** with premium canvas anim
 
 ## 📸 Screenshots
 
-> **Replace the placeholders below with your own screenshots or GIFs.**
+<div align="center">
+
+### 🏠 Home
+<img src="screenshots/home.png" alt="Home page — hero section with animated canvas background" width="800"/>
+
+<br>
 
 <table>
   <tr>
-    <td align="center"><b>🏠 Home</b></td>
     <td align="center"><b>⌨️ Practice Mode</b></td>
-  </tr>
-  <tr>
-    <td><img src="screenshots/home.png" alt="Home page — hero section with animated canvas background" width="400"/></td>
-    <td><img src="screenshots/practice.png" alt="Practice mode — typing a Sherlock quote with live WPM and accuracy" width="400"/></td>
-  </tr>
-  <tr>
     <td align="center"><b>🏁 Competition Mode</b></td>
+  </tr>
+  <tr>
+    <td><img src="screenshots/practice.png" alt="Practice mode — typing a Sherlock quote with live WPM and accuracy" width="400"/></td>
+    <td><img src="screenshots/competition.png" alt="Competition mode — race a friend in real time" width="400"/></td>
+  </tr>
+  <tr>
     <td align="center"><b>🏆 Leaderboard</b></td>
-  </tr>
-  <tr>
-    <td><img src="screenshots/competition.png" alt="Multiplayer race — two players typing the same quote in real time" width="400"/></td>
-    <td><img src="screenshots/leaderboard.png" alt="Global leaderboard showing top scores" width="400"/></td>
-  </tr>
-  <tr>
     <td align="center"><b>📅 Daily Challenge</b></td>
-    <td align="center"><b>👤 Profile & Achievements</b></td>
   </tr>
   <tr>
+    <td><img src="screenshots/leaderboard.png" alt="Global leaderboard showing top scores" width="400"/></td>
     <td><img src="screenshots/daily-challenge.png" alt="Daily challenge card with streak tracking" width="400"/></td>
-    <td><img src="screenshots/profile.png" alt="User profile page with achievement badges" width="400"/></td>
   </tr>
 </table>
+
+</div>
 
 <br>
 
