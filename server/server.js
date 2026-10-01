@@ -185,11 +185,12 @@ io.on("connection", (socket) => {
 
 const startServer = async () => {
   try {
-    if (!process.env.MONGO_URI) {
+    const mongoURI = process.env.MONGO_URI || process.env.MONGO_URL;
+    if (!mongoURI) {
       throw new Error("MONGO_URI is missing in .env");
     }
 
-    await mongoose.connect(process.env.MONGO_URI);
+    await mongoose.connect(mongoURI);
     console.log("MongoDB connected");
 
     // Seed default admin account if none exists
